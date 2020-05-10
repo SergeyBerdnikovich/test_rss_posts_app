@@ -1,0 +1,19 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: postgres
+
+development:
+  <<: *default
+  database: test_rss_posts_development
+
+test:
+  <<: *default
+  database: test_rss_posts_test
+
+production:
+  <<: *default
+  database: test_rss_posts_production
+  username: test_rss_posts
+  password: <%= ENV['TEST_RSS_POSTS_DATABASE_PASSWORD'] %>

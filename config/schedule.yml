@@ -1,0 +1,5 @@
+fetchPostsJob:
+  cron: "0 * * * *"
+  class: "FetchPostsJob"
+  :args:
+    - null

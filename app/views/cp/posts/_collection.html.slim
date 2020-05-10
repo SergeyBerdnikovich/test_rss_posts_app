@@ -1,0 +1,29 @@
+table aria-labelledby="posts"
+  thead
+    tr
+      - collection_presenter.attribute_types.each do |attr_name, attr_type|
+        th.cell-label
+          = link_to(sanitized_order_params(page, collection_field_name).merge(collection_presenter.order_params_for(attr_name, key: collection_field_name))) do
+            = t("helpers.label.#{collection_presenter.resource_name}.#{attr_name}", default: attr_name.to_s).titleize
+            - if collection_presenter.ordered_by?(attr_name)
+              span.cell-label__sort-indicator.cell-label__sort-indicator--
+              svg aria-hidden="true"
+                use xlink:href="#icon-up-caret"
+      - [valid_action?(:edit, collection_presenter.resource_name), valid_action?(:destroy, collection_presenter.resource_name)].count(true).times do
+        th scope="col"
+  tbody
+    - resources.each do |resource|
+      tr.js-table-row tabindex="0"
+        - collection_presenter.attributes_for(resource).each do |attribute|
+          td.cell-data.cell-data--string
+            - if show_action? :show, resource
+              a.action-show href="#{resource.link}" target="_blank"
+                = render_field(attribute)
+        - if valid_action? :edit, collection_presenter.resource_name
+          td
+            - if show_action? :edit, resource
+              = link_to(t("administrate.actions.edit"), [:edit, namespace, resource], class: "action-edit")
+        - if valid_action? :destroy, collection_presenter.resource_name
+          td
+            - if show_action? :destroy, resource
+              = link_to(t("administrate.actions.destroy"), [namespace, resource], class: "text-color-red", method: :delete, data: { confirm: t("administrate.actions.confirm") })

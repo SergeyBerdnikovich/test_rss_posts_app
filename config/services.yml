@@ -1,0 +1,9 @@
+default: &default
+  rss_service:
+    host: 'http://localhost:8081'
+
+development:
+  <<: *default
+
+test:
+  <<: *default

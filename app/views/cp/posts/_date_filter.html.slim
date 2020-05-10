@@ -1,0 +1,11 @@
+div.field-unit style="width: 180px; margin: 0 10px 0 0;"
+  input#date_filter data-type="date" type="text" name="filter[publish_date]" placeholder="Filter by publish date"
+a#filter.button onclick="handleFilter()" Filter
+
+javascript:
+  function handleFilter() {
+    var search = document.getElementById("search").value;
+    var date   = document.getElementById("date_filter").value;
+    var url    = "#{cp_posts_path}?search=" + search + "&date=" + date;
+    window.location.replace(url);
+  }

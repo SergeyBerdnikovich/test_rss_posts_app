@@ -1,0 +1,15 @@
+---
+:concurrency: 10
+
+:queues:
+  - [fetch_posts, 2]
+  - [default, 1]
+
+default: &default
+  redis_url: redis://localhost:6379
+
+development:
+  <<: *default
+
+test:
+  <<: *default
