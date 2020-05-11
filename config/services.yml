@@ -1,6 +1,9 @@
 default: &default
   rss_service:
     host: 'http://localhost:8081'
+    auth_path: '/authenticate'
+    login: 'TestRssApp'
+    password: 'password'
 
 development:
   <<: *default

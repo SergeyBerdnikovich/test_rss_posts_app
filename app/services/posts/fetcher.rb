@@ -28,22 +28,39 @@ class Posts::Fetcher
   attr_reader :posts, :errors
 
   def initialize(urls)
-    @urls = urls
+    @posts              = []
+    @urls               = urls
+    @rss_service_config = Rails.application.config.services[:rss_service]
   end
 
   def fetch_posts
-    response = request_sender.send_request(:get, RSS_FEED_ITEMS_PATH, urls: urls)
-    parsed_response = JSON.parse(response)
+    authenticator.authenticate
+    if authenticator.authenticated?
+      fetch_data(authenticator.token)
+    else
+      @errors = authenticator.error
+    end
 
-    @posts  = parsed_response['items']
-    @errors = parsed_response['errors']
-
-    [@posts, @errors]
+    [posts, errors]
   end
 
   private
 
+  attr_reader :rss_service_config
+
+  def authenticator
+    @authenticator ||= ::Authenticator.new(rss_service_config)
+  end
+
+  def fetch_data(token)
+    response = request_sender.send_request(:get, RSS_FEED_ITEMS_PATH, urls: urls, headers: {'Token' => token})
+    parsed_response = JSON.parse(response.body)
+
+    @posts  = parsed_response['items']
+    @errors = parsed_response['errors']
+  end
+
   def request_sender
-    @request_sender ||= ::RequestSender.new(Rails.application.config.services[:rss_service][:host])
+    @request_sender ||= ::RequestSender.new(rss_service_config[:host])
   end
 end

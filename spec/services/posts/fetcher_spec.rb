@@ -6,7 +6,8 @@ describe Posts::Fetcher do
   describe 'fetch_posts' do
     context 'when rss service is available' do
       let(:urls) { ['test_utl_1', 'test_url_2'] }
-      let(:response) do
+      let(:response) { double(:response, body: response_body.to_json, code: 200) }
+      let(:response_body) do
         {
           'items' => [
             {
@@ -31,17 +32,33 @@ describe Posts::Fetcher do
       end
 
       before(:each) do
+        allow(Authenticator).to receive(:new).and_return(authenticator)
         RequestSender.any_instance
                      .stub(:send_request)
-                     .with(:get, described_class::RSS_FEED_ITEMS_PATH, urls: urls)
-                     .and_return(response.to_json)
+                     .with(:get, described_class::RSS_FEED_ITEMS_PATH, urls: urls, headers: {'Token' => '123'})
+                     .and_return(response)
       end
 
-      it 'returns posts and error' do
-        posts, error = subject.fetch_posts
+      context 'when service is authenticated' do
+        let(:authenticator) { double(:authenticator, authenticate: true, authenticated?: true, token: '123') }
 
-        expect(posts.size).to eq(2)
-        expect(error).to eq('Some error')
+        it 'returns posts and error' do
+          posts, error = subject.fetch_posts
+
+          expect(posts.size).to eq(2)
+          expect(error).to eq('Some error')
+        end
+      end
+
+      context 'when service is not authenticated' do
+        let(:authenticator) { double(:authenticator, authenticate: true, authenticated?: false, error: 'Some auth error') }
+
+        it 'returns empty array and auth error' do
+          posts, error = subject.fetch_posts
+
+          expect(posts.size).to eq(0)
+          expect(error).to eq('Some auth error')
+        end
       end
     end
   end
