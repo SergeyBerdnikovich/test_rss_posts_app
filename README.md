@@ -16,3 +16,9 @@ start server: <code>rails s</code>
 
 for tests tun: <code>rspec</code>
 note that for integration tests you need to have rss service to be run
+
+<h2>For running via Docker:</h2>
+You need to run <code>docker-compose up -d</code>
+an example of config file is located in <code>test_rss_posts_app/docker-compose.yml</code>
+also you need to have <code>.env</code> file
+The images of services already builded and located in docker hub but you can manually build them, <code>Dockerfile</code> is located inside each of the projects
