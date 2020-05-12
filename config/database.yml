@@ -15,5 +15,6 @@ test:
 production:
   <<: *default
   database: test_rss_posts_production
-  username: test_rss_posts
+  username: <%= ENV['TEST_RSS_POSTS_DATABASE_USERNAME'] %>
   password: <%= ENV['TEST_RSS_POSTS_DATABASE_PASSWORD'] %>
+  host: <%= ENV['TEST_RSS_POSTS_DATABASE_HOST'] %>

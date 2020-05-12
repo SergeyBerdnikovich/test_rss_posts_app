@@ -10,3 +10,10 @@ development:
 
 test:
   <<: *default
+
+production:
+  rss_service:
+    host: <%= ENV['TEST_RSS_SERVICE_HOST'] %>
+    auth_path: <%= ENV['TEST_RSS_SERVICE_PATH'] %>
+    login: <%= ENV['TEST_RSS_SERVICE_LOGIN'] %>
+    password: <%= ENV['TEST_RSS_SERVICE_PASSWORD'] %>

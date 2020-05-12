@@ -21,7 +21,6 @@
 #   errors [String] a concatenated errors of fetching feed items
 #
 class Posts::Fetcher
-  RSS_SERVICE_HOST    = 'http://localhost:8081'.freeze
   RSS_FEED_ITEMS_PATH = '/rss_feeds_items'.freeze
 
   attr_reader :urls
