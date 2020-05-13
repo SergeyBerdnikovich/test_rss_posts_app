@@ -13,6 +13,7 @@ module TestRssPostsApp
 
     config.autoload_paths += %w(
       app/services
+      app/workers
     ).map { |path| File.join config.root, path }
 
     config.active_job.queue_adapter = :sidekiq

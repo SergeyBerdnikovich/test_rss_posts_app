@@ -6,24 +6,52 @@ services:
       - postgres_volume:/var/lib/postgresql/data
     env_file:
       - '.env'
+
   redis:
     image: redis
     command: redis-server
     volumes:
       - 'redis_volume:/data'
+
   sidekiq:
     depends_on:
       - db
       - redis
-    build: .
-    command: sidekiq
+      - rss_service
+    image: sergeyberdnikovich/rss_posts_app
+    command: bash -c "sleep 30; sidekiq;"
     volumes:
       - '.:/myapp'
     env_file:
       - '.env'
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5671-5672:5671-5672
+      - "15671:15672"
+    volumes:
+      - 'rabbitmq_volume:/data'
+    env_file:
+      - '.env'
+
   rss_service:
     image: sergeyberdnikovich/rss_reader
     command: make run
+    depends_on:
+      - rabbitmq
+    env_file:
+      - '.env'
+
+  web_rabbit_worker:
+    image: sergeyberdnikovich/rss_posts_app
+    command: bash -c "sleep 30; WORKERS=NewFeedItemsWorker rake sneakers:run;"
+    depends_on:
+      - db
+      - rabbitmq
+    env_file:
+      - '.env'
+
   web:
     image: sergeyberdnikovich/rss_posts_app
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
@@ -35,9 +63,11 @@ services:
       - db
       - sidekiq
       - rss_service
+      - rabbitmq
     env_file:
       - '.env'
 
 volumes:
   redis_volume:
   postgres_volume:
+  rabbitmq_volume:

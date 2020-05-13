@@ -19,6 +19,8 @@ gem 'sidekiq-failures', '~> 1.0.0'
 gem 'sidekiq-statistic', '~> 1.4.0'
 gem 'sidekiq-cron', '~> 1.1'
 gem 'slim', '~> 4.1.0'
+gem 'bunny', '>= 2.14.1'
+gem 'sneakers', '~> 2.11.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
