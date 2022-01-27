@@ -14,7 +14,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'administrate', '~> 0.13.0'
 gem 'httparty', '~> 0.18.0'
 gem 'activerecord-import', '~> 1.0.4'
-gem 'sidekiq', '~> 6.0.5'
+gem 'sidekiq', '~> 6.4.0'
 gem 'sidekiq-failures', '~> 1.0.0'
 gem 'sidekiq-statistic', '~> 1.4.0'
 gem 'sidekiq-cron', '~> 1.1'
